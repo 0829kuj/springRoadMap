@@ -1,10 +1,12 @@
 package hello.core.singleton;
 
+import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import org.springframework.context.annotation.Bean;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 
 class StatefulServiceTest {
@@ -16,11 +18,15 @@ class StatefulServiceTest {
         StatefulService statefulService2 = ac.getBean(StatefulService.class);
 
         // ThreadA: A사용자 10000원 주문
-        statefulService1.order("userA", 10000);
+        int userAprice = statefulService1.order("userA", 10000);
         // ThreadB: B사용자 15000원 주문
-        statefulService2.order("userB", 15000);
+        int userBprice = statefulService2.order("userB", 15000);
 
-        // ThreadA: A사용자 10000원 주문
+        // ThreadA: A사용자 주문 금액 조회
+//        int price = statefulService1.getPrice();
+        System.out.println("userAprice = " + userAprice);
+
+        assertThat(userAprice).isEqualTo(10000);
     }
 
     static class TestConfig {
